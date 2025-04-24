@@ -22,19 +22,16 @@ function VersionDate-Subject-MergesWithPRLink-CategorizedSorted {
         }
         if ($previousRelease) { $funcArgs['SecondRef'] = @($previousRelease)[0] }
         $commitHistory = Get-RepositoryCommitHistory @funcArgs
-        $next = $false
         $commitHistoryCollection = & {
-            foreach ($l in $commitHistory) {
+            $next = $false
+            $commitHistory | ? { $_ } | % {
                 if ($next -eq $false) {
-                    if ($l -match '^[a-z0-9]{7} Merge pull request #(\d+) from .+') {
+                    if ($_ -match '^[a-z0-9]{7} Merge pull request #(\d+) from .+') {
                         $prNum = $matches[1]
                         $next = $true
                     }
                 }else {
-                    if (!$l) {
-                        continue
-                    }
-                    "$l (#$prNum)"
+                    "$_ (#$prNum)"
                     $next = $false
                 }
             }
