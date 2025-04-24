@@ -27,14 +27,13 @@ function VersionDate-Subject-MergesWithPRLink-CategorizedSorted {
             foreach ($l in $commitHistory) {
                 if ($next -eq $false) {
                     if ($l -match '^[a-z0-9]{7} Merge pull request #(\d+) from') {
-                        $c = [System.Collections.ArrayList]@($l)
+                        $prNum = $matches[1]
                         $next = $true
                     }
                 }else {
                     if (!$l) {
                         continue
                     }
-                    $prNum = if ($c[0] -match 'Merge pull request #(\d+) from') { $matches[1] }
                     "$l (#$prNum)"
                     $next = $false
                 }
